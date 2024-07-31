@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:weilan/route/route_utils.dart';
+import 'package:weilan/route/routes.dart';
 
 import 'pages/home_page.dart';
 
@@ -36,7 +38,10 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: const HomePage(),
+            navigatorKey: RouteUtils.navigatorKey,
+            onGenerateRoute: Routes.generateRoute,
+            initialRoute: RoutePath.home,
+            // home: const HomePage(),
           );
         },
       ),
