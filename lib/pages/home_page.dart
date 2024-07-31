@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:weilan/pages/web_view_page.dart';
@@ -18,40 +19,48 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: 170.h,
-            child: Swiper(
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return Container(
-                  width: double.infinity,
-                  height: 150.h,
-                  color: Colors.purple.withOpacity(0.2),
-                  margin: EdgeInsets.all(10.r),
-                );
-              },
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
+          child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _banner(),
+            ListView.builder(
+              shrinkWrap: true,//內部計算所有子元素高度
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return _listItemView();
               },
               itemCount: 10,
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       )),
+    );
+  }
+
+  Widget _banner() {
+    return SizedBox(
+      width: double.infinity,
+      height: 170.h,
+      child: Swiper(
+        itemCount: 3,
+        itemBuilder: (context, index) {
+          return Container(
+            width: double.infinity,
+            height: 150.h,
+            color: Colors.purple.withOpacity(0.2),
+            margin: EdgeInsets.all(10.r),
+          );
+        },
+      ),
     );
   }
 
   Widget _listItemView() {
     return GestureDetector(
       onTap: () {
-        RouteUtils.push(context, const WebViewPage());
+        // RouteUtils.push(context, const WebViewPage());
+        RouteUtils.pushForNamed(context, RoutePath.webViewPage,
+            arguments: {"name": "路由传值"});
         // Navigator.pushNamed(context, RoutePath.webViewPage);
       },
       child: Card(

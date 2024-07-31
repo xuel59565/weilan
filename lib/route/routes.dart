@@ -7,9 +7,9 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutePath.home:
-        return pageRoute(const HomePage());
+        return pageRoute(const HomePage(),settings:settings);
       case RoutePath.webViewPage:
-        return pageRoute(const WebViewPage());
+        return pageRoute(const WebViewPage(),settings:settings);
       // default:
       //   return pageRoute(const HomePage());
     }
