@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
-import 'package:weilan/pages/web_view_page.dart';
+import 'package:weilan/pages/home/home_vm.dart';
 import 'package:weilan/route/route_utils.dart';
 import 'package:weilan/route/routes.dart';
+
+import '../../datas/home_banner_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +15,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<BannerData>? bannerList;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initBannerData();
+  }
+
+  Future<void> initBannerData() async {
+    bannerList = await HomeViewModel.getBanner();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             _banner(),
             ListView.builder(
-              shrinkWrap: true,//內部計算所有子元素高度
+              shrinkWrap: true, //內部計算所有子元素高度
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return _listItemView();
@@ -40,15 +54,20 @@ class _HomePageState extends State<HomePage> {
   Widget _banner() {
     return SizedBox(
       width: double.infinity,
-      height: 170.h,
+      height: 220.h,
       child: Swiper(
-        itemCount: 3,
+        itemCount: bannerList?.length ?? 0,
+        autoplay: true,
         itemBuilder: (context, index) {
           return Container(
             width: double.infinity,
-            height: 150.h,
+            height: 200.h,
             color: Colors.purple.withOpacity(0.2),
             margin: EdgeInsets.all(10.r),
+            child: Image.network(
+              '${bannerList?[index].imagePath}',
+              fit: BoxFit.fill,
+            ),
           );
         },
       ),

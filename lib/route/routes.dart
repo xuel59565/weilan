@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../pages/home_page.dart';
+import '../pages/home/home_page.dart';
 import '../pages/web_view_page.dart';
+
 ///路由管理
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutePath.home:
-        return pageRoute(const HomePage(),settings:settings);
+        return pageRoute(const HomePage(), settings: settings);
       case RoutePath.webViewPage:
-        return pageRoute(const WebViewPage(),settings:settings);
+        return pageRoute(const WebViewPage(), settings: settings);
       // default:
       //   return pageRoute(const HomePage());
     }
-    return pageRoute(  Scaffold(
+    return pageRoute(Scaffold(
       body: Center(child: Text('路由：${settings.name}不存在')),
     ));
-
   }
 
   static MaterialPageRoute pageRoute(
