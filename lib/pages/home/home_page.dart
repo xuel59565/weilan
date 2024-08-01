@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:provider/provider.dart';
+import 'package:weilan/datas/home_data.dart';
 import 'package:weilan/pages/home/home_vm.dart';
 import 'package:weilan/route/route_utils.dart';
 import 'package:weilan/route/routes.dart';
@@ -15,66 +18,76 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<BannerData>? bannerList;
+  HomeViewModel viewModel = HomeViewModel();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    initBannerData();
-  }
-
-  Future<void> initBannerData() async {
-    bannerList = await HomeViewModel.getBanner();
-    setState(() {});
+    viewModel.initDio();
+    viewModel.getBanner();
+    viewModel.getHomeList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _banner(),
-            ListView.builder(
-              shrinkWrap: true, //內部計算所有子元素高度
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return _listItemView();
-              },
-              itemCount: 10,
-            )
-          ],
-        ),
-      )),
-    );
-  }
-
-  Widget _banner() {
-    return SizedBox(
-      width: double.infinity,
-      height: 220.h,
-      child: Swiper(
-        itemCount: bannerList?.length ?? 0,
-        autoplay: true,
-        itemBuilder: (context, index) {
-          return Container(
-            width: double.infinity,
-            height: 200.h,
-            color: Colors.purple.withOpacity(0.2),
-            margin: EdgeInsets.all(10.r),
-            child: Image.network(
-              '${bannerList?[index].imagePath}',
-              fit: BoxFit.fill,
-            ),
-          );
-        },
+    return ChangeNotifierProvider<HomeViewModel>(
+      create: (context) {
+        return viewModel;
+      },
+      child: Scaffold(
+        body: SafeArea(
+            child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _banner(),
+              _homeListView(),
+            ],
+          ),
+        )),
       ),
     );
   }
 
-  Widget _listItemView() {
+  Widget _banner() {
+    return Consumer<HomeViewModel>(builder: (context, vm, child) {
+      return SizedBox(
+        width: double.infinity,
+        height: 220.h,
+        child: Swiper(
+          itemCount: vm.bannerList?.length ?? 0,
+          autoplay: true,
+          itemBuilder: (context, index) {
+            return Container(
+              width: double.infinity,
+              height: 200.h,
+              color: Colors.purple.withOpacity(0.2),
+              margin: EdgeInsets.all(10.r),
+              child: Image.network(
+                '${vm.bannerList?[index].imagePath}',
+                fit: BoxFit.fill,
+              ),
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  Widget _homeListView() {
+    return Consumer<HomeViewModel>(builder: (context, vm, child) {
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: vm.listData?.length ?? 0,
+        itemBuilder: (context, index) {
+          return _listItemView(vm.listData?[index]);
+        },
+      );
+    });
+  }
+
+  Widget _listItemView(HomeListItemData? item) {
     return GestureDetector(
       onTap: () {
         // RouteUtils.push(context, const WebViewPage());
@@ -100,10 +113,12 @@ class _HomePageState extends State<HomePage> {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  const Text(' 作者'),
+                  Text(item?.author?.isEmpty == true
+                      ? ' ${item?.shareUser}'
+                      : ' ${item?.author}'),
                   const Expanded(child: SizedBox()),
                   Text(
-                    '2024-07-30',
+                    '${item?.niceShareDate}',
                     style: TextStyle(fontSize: 12.sp),
                   ),
                   const Text(
@@ -112,11 +127,17 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
               ),
-              const Text('文字内容文字内容文字内容文字内容文字内容'),
+              SizedBox(
+                height: 5.h,
+              ),
+              Text('${item?.title}'),
+              SizedBox(
+                height: 5.h,
+              ),
               Row(
                 children: [
                   Text(
-                    '分类',
+                    '${item?.chapterName}',
                     style: TextStyle(color: Colors.green, fontSize: 12.sp),
                   ),
                   const Expanded(child: SizedBox()),

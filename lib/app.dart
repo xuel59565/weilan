@@ -4,7 +4,6 @@ import 'package:oktoast/oktoast.dart';
 import 'package:weilan/route/route_utils.dart';
 import 'package:weilan/route/routes.dart';
 
-
 Size get designSize {
   final firstView = WidgetsBinding.instance.platformDispatcher.views.first;
   // 逻辑短边
