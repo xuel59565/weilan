@@ -8,8 +8,6 @@ import 'package:weilan/pages/home/home_vm.dart';
 import 'package:weilan/route/route_utils.dart';
 import 'package:weilan/route/routes.dart';
 
-import '../../datas/home_banner_data.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -24,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    viewModel.initDio();
     viewModel.getBanner();
     viewModel.getHomeList();
   }
